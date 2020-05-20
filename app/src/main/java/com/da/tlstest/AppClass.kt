@@ -3,8 +3,8 @@ package com.da.tlstest
 import android.app.Application
 import android.os.Build
 import org.conscrypt.Conscrypt
+import org.conscrypt.OpenSSLProvider
 import java.security.Security
-
 
 class AppClass : Application() {
 
@@ -13,7 +13,7 @@ class AppClass : Application() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             Security.insertProviderAt(Conscrypt.newProvider(), 1)
         } else {
-            TODO("Add support for older versions")
+            Security.insertProviderAt(OpenSSLProvider("OkHttp"), 1)
         }
     }
 }
