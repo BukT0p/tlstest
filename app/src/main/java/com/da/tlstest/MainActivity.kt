@@ -4,11 +4,14 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.ConnectionSpec
 import okhttp3.OkHttpClient
 import okhttp3.ResponseBody
 import okhttp3.logging.HttpLoggingInterceptor
+import org.jsoup.Jsoup
 import retrofit2.Retrofit
 import retrofit2.http.GET
 
@@ -23,7 +26,7 @@ class MainActivity : AppCompatActivity() {
                         this.level = (HttpLoggingInterceptor.Level.BODY)
                     }).build()
             )
-            .baseUrl("https://www.howsmyssl.com")
+            .baseUrl(BASE_URL)
             .build()
             .create(IApi::class.java)
     }
@@ -32,22 +35,26 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         if (savedInstanceState == null) {
-            performRequest()
+            lifecycleScope.launch {
+                text.text = testTLS(retrofit.check())
+            }
         }
-        webView.loadUrl("https://www.howsmyssl.com")
+        webView.loadUrl(BASE_URL)
     }
 
-    private fun performRequest() {
-        lifecycleScope.launch {
-            val result = retrofit.check()
-            val str = result.string()
-            val messageStart = str.indexOf("Your client is using")
-            text.text = str.substring(messageStart, messageStart + 300)
-        }
+    private suspend fun testTLS(responseBody: ResponseBody) = withContext(Dispatchers.IO) {
+        val dom = Jsoup.parse(responseBody.byteStream(), null, BASE_URL)
+        dom.body().getElementsByTag("div").firstOrNull {
+            it.children().first().text() == "Version"
+        }?.children()?.get(1)?.text()
     }
 
     interface IApi {
         @GET("/")
         suspend fun check(): ResponseBody
+    }
+
+    companion object {
+        const val BASE_URL = "https://www.howsmyssl.com"
     }
 }
