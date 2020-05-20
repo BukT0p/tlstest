@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         webView.loadUrl(BASE_URL)
         lifecycleScope.launch {
-            text.text = checkTLS()
+            text.append(checkTLS())
         }
     }
 
