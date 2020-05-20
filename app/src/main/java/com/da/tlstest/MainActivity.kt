@@ -31,7 +31,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        if (savedInstanceState == null) performRequest()
+        if (savedInstanceState == null) {
+            performRequest()
+        }
+        webView.loadUrl("https://www.howsmyssl.com")
     }
 
     private fun performRequest() {
