@@ -51,7 +51,7 @@ dependencies {
     def retrofitVersion = '2.8.2'
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
 
-    def okHttpVersion = '4.6.0'
+    def okHttpVersion = '4.7.2'
     implementation "com.squareup.okhttp3:okhttp:$okHttpVersion"
     implementation "com.squareup.okhttp3:logging-interceptor:$okHttpVersion"
 

@@ -11,7 +11,7 @@ class AppClass : Application() {
     override fun onCreate() {
         super.onCreate()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-//            Security.insertProviderAt(Conscrypt.newProvider(), 1)
+            Security.insertProviderAt(Conscrypt.newProvider(), 1)
         } else {
             TODO("Add support for older versions")
         }
